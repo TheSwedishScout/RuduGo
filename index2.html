@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>Rudu Go</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+   crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+   crossorigin=""></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	<div id="map"></div>
+	<script type="text/javascript">
+		var map = L.map('map').setView([57.707396, 12.947276], 18);
+		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidGhlc3dlZGlzaHNjb3V0IiwiYSI6ImNqbmRrMDdzdjBsOGUzcXNmdXZ1Z2xvZHMifQ.7wMj2M1mjUInwuuvFrhM9A', {
+		    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		    maxZoom: 18,
+		    minZoom: 18,
+		    zoomControl: false,
+		    id: 'mapbox.streets',
+		    accessToken: 'pk.eyJ1IjoidGhlc3dlZGlzaHNjb3V0IiwiYSI6ImNqbmRrMDdzdjBsOGUzcXNmdXZ1Z2xvZHMifQ.7wMj2M1mjUInwuuvFrhM9A'
+		}).addTo(map);
+
+		map.locate({watch: true, setView: true, enableHighAccuracy:true});
+		function onLocationFound(e) {
+		    var radius = e.accuracy / 2;
+		    map.setZoom(18);
+
+		    L.marker(e.latlng).addTo(map)
+		        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+		    L.circle(e.latlng, radius).addTo(map);
+		}
+
+		map.on('locationfound', onLocationFound);
+
+		var popup = L.popup();
+
+		function onMapClick(e) {
+			console.log(e)
+			console.log(map);
+			//map.setZoom(18);
+			//var marker = L.marker(e.latlng).addTo(map);
+		    popup
+		        .setLatLng(e.latlng)
+		        .setContent("You clicked the map at " + e.latlng.toString())
+		        .openOn(map);
+		    
+		}
+		map.on('click', onMapClick);
+
+		function onLocationError(e) {
+		    alert(e.message);
+		}
+		map.on('locationerror', onLocationError);
+
+
+
+
+		var marker = L.marker([57.707396, 12.947276]).addTo(map)
+			.bindPopup("Tove: 57.707396, 12.947276");
+	</script>
+</body>
+</html>
